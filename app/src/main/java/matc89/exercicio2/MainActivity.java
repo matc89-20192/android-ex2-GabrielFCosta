@@ -8,19 +8,18 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView texto;
+    private TextView textView;
     private String nome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        texto = (TextView)findViewById(R.id.textView);
+        textView = (TextView)findViewById(R.id.textView);
     }
 
     public void botaoClicado(View v) {
         Intent outra = new Intent(this, OutraActivity.class);
-
         outra.putExtra("text",nome);
         startActivityForResult(outra,0);
     }
@@ -29,21 +28,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode,int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == RESULT_OK) {
             nome = data.getStringExtra("nome");
-            texto.setText("Oi, " + nome + "!");
-
+            if(!(nome.isEmpty())){
+                textView.setText("Oi, " + nome + "!");
+            }
+            else{
+                textView.setText("Oi!");
+            }
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putString("cumprimento",texto.getText().toString());
+        outState.putString("cumprimento",textView.getText().toString());
+        outState.putString("nome",nome);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState){
         super.onRestoreInstanceState(savedInstanceState);
-        texto.setText(savedInstanceState.getString("cumprimento"));
+        textView.setText(savedInstanceState.getString("cumprimento"));
+        nome = savedInstanceState.getString("nome");
     }
 
 }
